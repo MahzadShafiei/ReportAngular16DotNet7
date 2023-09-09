@@ -17,7 +17,7 @@ namespace Report.Api.Controllers
         [HttpGet]        
         public async Task<IActionResult> GetAll()
         {
-            var result= employeeBusiness.GetAll();
+            var result= await employeeBusiness.GetAll();
             return Ok(result);
         }
                 

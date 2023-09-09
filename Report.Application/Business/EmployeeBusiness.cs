@@ -16,8 +16,8 @@ namespace Report.Application.Business
 
         public async Task<List<Employee>> GetAll()
         {
-            var employees= await dataContext.Employees.ToListAsync();
-            return employees;
+            return await dataContext.Employees.ToListAsync();
+             
         }
     }
 }
