@@ -20,6 +20,7 @@ namespace Report.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeContext")));
             builder.Services.AddScoped<IEmployeeBusiness,EmployeeBusiness>();
+            builder.Services.AddScoped<ITagValueBusiness,TagValueBusiness>();
 
             var app = builder.Build();
 
