@@ -7,19 +7,28 @@ import { ButtonModule } from 'primeng/button';
 import { EmployeeListComponent } from './components/employees/employee-list/employee-list.component';
 import {HttpClientModule} from '@angular/common/http';
 import { ChartModule } from 'primeng/chart';
-
+import { CalendarModule } from 'primeng/calendar';
+import { ReportMenuComponent } from './components/repor/consumption/reportMenu/report-menu/report-menu.component';
+import { PanelMenuModule } from 'primeng/panelmenu'
+import { FormsModule } from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 
 @NgModule({
   declarations: [
     AppComponent,
-    EmployeeListComponent
+    EmployeeListComponent,
+    ReportMenuComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ButtonModule,
     HttpClientModule,
-    ChartModule,
+    ChartModule,    
+    CalendarModule,
+    PanelMenuModule,
+    BrowserAnimationsModule,
+    FormsModule,
    
   ],
   providers: [],

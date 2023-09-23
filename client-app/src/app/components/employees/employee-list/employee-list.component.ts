@@ -2,11 +2,14 @@ import { Component , OnInit} from '@angular/core';
 import { employeeModel } from 'src/app/models/employeeModel';
 import { EmployeesService } from 'src/app/services/employees.service';
 
+
+
 @Component({
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.css']
 })
+
 
 
 export class EmployeeListComponent implements OnInit {
@@ -20,7 +23,11 @@ constructor(private employeeService: EmployeesService)
 {
 }
 
+date: Date | undefined;
+
 ngOnInit(): void {
+
+
 //   this.employeeService.getAllEmployees().subscribe({
 //     next:(employee)=>{
 //       this.employees=employee;
