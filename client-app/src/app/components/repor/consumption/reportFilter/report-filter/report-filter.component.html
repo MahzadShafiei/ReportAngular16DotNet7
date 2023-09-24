@@ -1,0 +1,53 @@
+<div class="container-fluid">
+    <div class="row">        
+        <div class="col-10">
+        <div class="card">
+            <p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+        </div>
+        </div>
+
+        <div class="col-2">
+            <form>
+                {{selectedMeter}}
+                <div style="margin: 5%;">
+                <div class="form-group">
+                <label>تاریخ شروع</label>             
+                <div class="card flex justify-content-center">
+                <p-calendar [(ngModel)]="startDate" placeholder="started date" class="form-control"></p-calendar>                
+                </div>
+                <small class="form-text text-muted">لطفا تاریخ شروع را مشخص نمایید.</small>
+                </div>
+
+                <div style="margin: 5%;">
+                <label>تاریخ پایان</label>
+                <div class="card flex justify-content-center">
+                    <p-calendar [(ngModel)]="endDate" placeholder="end date" class="form-control"></p-calendar>
+                </div>
+                <small class="form-text text-muted">لطفا تاریخ پایان را مشخص نمایید.</small>
+                </div>
+                
+
+
+                <div style="margin: 5%;">
+                    <label>نام سالن</label>
+                    <div class="card flex justify-content-center">
+                        <p-dropdown [options]="halls" [(ngModel)]="selectedHall" optionLabel="name"></p-dropdown>
+                    </div>
+                    <small class="form-text text-muted">لطفا نام سالن را مشخص نمایید.</small>
+                </div>
+
+
+                <div style="margin: 5%;">
+                    <label>دوره ی نمایش</label>
+                    <div class="card flex justify-content-center">
+                        <p-dropdown [options]="periods" [(ngModel)]="selectedPeriod" optionLabel="name"></p-dropdown>
+                    </div>
+                    <small class="form-text text-muted">لطفا دوره ی نمایش را مشخص نمایید.</small>
+                </div>
+
+            </div>
+            </form>
+        </div>
+   
+    </div>
+</div>

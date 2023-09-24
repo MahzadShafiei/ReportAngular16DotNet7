@@ -11,24 +11,29 @@ import { CalendarModule } from 'primeng/calendar';
 import { ReportMenuComponent } from './components/repor/consumption/reportMenu/report-menu/report-menu.component';
 import { PanelMenuModule } from 'primeng/panelmenu'
 import { FormsModule } from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ReportFilterComponent } from './components/repor/consumption/reportFilter/report-filter/report-filter.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
     AppComponent,
     EmployeeListComponent,
-    ReportMenuComponent
+    ReportMenuComponent,
+    ReportFilterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     ButtonModule,
     HttpClientModule,
     ChartModule,    
     CalendarModule,
-    PanelMenuModule,
+    PanelMenuModule,   
     BrowserAnimationsModule,
-    FormsModule,
+    DropdownModule,
+    
    
   ],
   providers: [],
