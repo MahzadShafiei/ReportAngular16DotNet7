@@ -30,6 +30,8 @@ export class ReportFilterComponent  implements OnInit{
 
   tagValues: tagValueModel[]=[];
 
+  loading: boolean = false;
+
   constructor(private reportFilterService: ReportFilterService)
   {
   }
@@ -53,6 +55,16 @@ export class ReportFilterComponent  implements OnInit{
   this.getByFilter();
 
   }
+
+  //جست و جوی دیتای 
+  load() {
+    this.loading = true;
+
+    setTimeout(() => {
+        this.loading = false
+    }, 2000);
+
+}
 
   getByFilter()
   {
