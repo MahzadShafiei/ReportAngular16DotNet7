@@ -1,4 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { Component , OnInit, Input} from '@angular/core';
+import { filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
 import { tagValueModel } from 'src/app/models/tagValueModel';
 import { ReportFilterService } from 'src/app/services/report-filter.service';
 
@@ -16,8 +18,8 @@ export class ReportFilterComponent  implements OnInit{
   basicData: any;
   basicOptions: any;
 
-  startDate: Date | undefined;
-  endDate: Date | undefined;
+  startDate: Date = new Date();
+  endDate: Date = new Date();
 
   halls: Hall[] | undefined;
   selectedHall: Hall | undefined;
@@ -32,7 +34,7 @@ export class ReportFilterComponent  implements OnInit{
 
   loading: boolean = false;
 
-  constructor(private reportFilterService: ReportFilterService)
+  constructor(private reportFilterService: ReportFilterService, private datepipe:DatePipe)
   {
   }
 
@@ -51,24 +53,33 @@ export class ReportFilterComponent  implements OnInit{
     { name: 'ماهانه', code: 'month' }
     
   ];
-
-  this.getByFilter();
-
+  
   }
 
   //جست و جوی دیتای 
   load() {
+
     this.loading = true;
+    this.getByFilter();
 
     setTimeout(() => {
         this.loading = false
     }, 2000);
 
-}
+  }
 
   getByFilter()
   {
-      this.reportFilterService.getTagValueByFilter().subscribe({
+
+    var parameter: filterParameter={
+      hallName: this.selectedHall?.code,
+      startDate: this.datepipe.transform(this.startDate, "yyyy-MM-dd"),
+      endDate: this.datepipe.transform(this.endDate, "yyyy-MM-dd"),
+      meter:3,
+      period: this.selectedPeriod?.code,
+    }
+
+      this.reportFilterService.getTagValueByFilter(parameter).subscribe({
     next:(tagValues)=>{
       this.tagValues=tagValues;
     },
@@ -129,8 +140,7 @@ export class ReportFilterComponent  implements OnInit{
                           }
                       }
                   }
-              };
-              
+              };             
        
   }
 

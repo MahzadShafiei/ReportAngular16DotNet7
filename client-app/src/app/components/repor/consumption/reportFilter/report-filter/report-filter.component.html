@@ -13,7 +13,7 @@
                 <div class="form-group">
                 <label>تاریخ شروع</label>             
                 <div class="card flex justify-content-center">
-                <p-calendar [(ngModel)]="startDate" placeholder="started date" class="form-control"></p-calendar>                
+                    <p-calendar name="startDate" [(ngModel)]="startDate" placeholder="started date" class="form-control"></p-calendar>                
                 </div>
                 <small class="form-text text-muted">لطفا تاریخ شروع را مشخص نمایید.</small>
                 </div>
@@ -21,26 +21,23 @@
                 <div style="margin: 5%;">
                 <label>تاریخ پایان</label>
                 <div class="card flex justify-content-center">
-                    <p-calendar [(ngModel)]="endDate" placeholder="end date" class="form-control"></p-calendar>
+                    <p-calendar name="endDate" [(ngModel)]="endDate" placeholder="end date" class="form-control"></p-calendar>
                 </div>
                 <small class="form-text text-muted">لطفا تاریخ پایان را مشخص نمایید.</small>
-                </div>
-                
-
+                </div>     
 
                 <div style="margin: 5%;">
                     <label>نام سالن</label>
                     <div class="card flex justify-content-center">
-                        <p-dropdown [options]="halls" [(ngModel)]="selectedHall" optionLabel="name"></p-dropdown>
+                        <p-dropdown name="selectedHall" [options]="halls" [(ngModel)]="selectedHall" optionLabel="name"></p-dropdown>
                     </div>
                     <small class="form-text text-muted">لطفا نام سالن را مشخص نمایید.</small>
                 </div>
 
-
                 <div style="margin: 5%;">
                     <label>دوره ی نمایش</label>
                     <div class="card flex justify-content-center">
-                        <p-dropdown [options]="periods" [(ngModel)]="selectedPeriod" optionLabel="name"></p-dropdown>
+                        <p-dropdown name="selectedPeriod" [options]="periods" [(ngModel)]="selectedPeriod" optionLabel="name"></p-dropdown>
                     </div>
                     <small class="form-text text-muted">لطفا دوره ی نمایش را مشخص نمایید.</small>
                 </div>

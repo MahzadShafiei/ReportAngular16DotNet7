@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Report.Application.Business;
 using Report.Application.Contract;
+using Report.Application.Dto.Include;
 
 namespace Report.Api.Controllers
 {
@@ -25,10 +26,11 @@ namespace Report.Api.Controllers
 
         [HttpGet]
         [Route("GetByFilter")]
-        public async Task<IActionResult> GetByFilter(string hallName, DateTime startDate, DateTime endDate, int meter)
+        public async Task<IActionResult> GetByFilter([FromQuery]FilterParameter filterParameter)
         {
-            var result = await tagValueBusiness.GetByFilter(hallName, startDate, endDate, meter);
-            return Ok(result);
+            //var result = await tagValueBusiness.GetByFilter(hallName, startDate, endDate, meter);
+            //return Ok(result);
+            return Ok();
         }
     }
 }

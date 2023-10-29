@@ -1,6 +1,7 @@
 export interface filterParameter {    
-    hallName: string;
-    startDate :Date;
-    endDate: Date;
-    meter : number;    
+    hallName: string | undefined;
+    startDate: string | null;
+    endDate: string | null;
+    meter : number;  
+    period:  string| undefined; 
 }

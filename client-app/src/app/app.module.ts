@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ReportFilterComponent } from './components/repor/consumption/reportFilter/report-filter/report-filter.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { DropdownModule } from 'primeng/dropdown';
     
    
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
