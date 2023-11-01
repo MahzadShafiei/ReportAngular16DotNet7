@@ -9,21 +9,17 @@ namespace Report.Application.Enum
     public class Halls
     {
     }
-
-    enum Hall
+    public enum HallType
     {
-        color5=5,
+        Paint = 1,
+        Body =2
     }
-    //enum Hall5
-    //{
-    //    CA_ES_47_MV01_Ptot = "color5",   
-    //}
 
-    enum Meter
+    public enum Meter
     {
-        water=1,
-        electricity=2,
-        Gas=3,
-        compresAir=4
+        Water = 1,
+        Gas = 2,
+        CompresAir = 4,
+        Electricity = 5,
     }
 }

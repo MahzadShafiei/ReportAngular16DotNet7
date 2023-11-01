@@ -28,9 +28,8 @@ namespace Report.Api.Controllers
         [Route("GetByFilter")]
         public async Task<IActionResult> GetByFilter([FromQuery]FilterParameter filterParameter)
         {
-            //var result = await tagValueBusiness.GetByFilter(hallName, startDate, endDate, meter);
-            //return Ok(result);
-            return Ok();
+            var result = await tagValueBusiness.GetByFilter(filterParameter);
+            return Ok(result);            
         }
     }
 }

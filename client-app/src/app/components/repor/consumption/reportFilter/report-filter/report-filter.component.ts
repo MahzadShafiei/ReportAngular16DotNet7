@@ -1,10 +1,16 @@
 import { DatePipe } from '@angular/common';
 import { Component , OnInit, Input} from '@angular/core';
-import { filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
+import { HallType, Meter, filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
 import { tagValueModel } from 'src/app/models/tagValueModel';
 import { ReportFilterService } from 'src/app/services/report-filter.service';
 
-interface Hall {
+
+interface DropDownHallType {
+  name: string;
+  code: HallType
+}
+
+interface DropDownHallCode {
   name: string;
   code: string;
 }
@@ -21,14 +27,19 @@ export class ReportFilterComponent  implements OnInit{
   startDate: Date = new Date();
   endDate: Date = new Date();
 
-  halls: Hall[] | undefined;
-  selectedHall: Hall | undefined;
+  hallsType: DropDownHallType[] | undefined;
+  selectedHallType: DropDownHallType | undefined;
 
-  periods: Hall[] | undefined;
-  selectedPeriod: Hall | undefined;
+  hallsCode: DropDownHallCode[] | undefined;
+  selectedHallCode: DropDownHallCode |undefined;
+
+  periods: DropDownHallCode[] | undefined;
+  selectedPeriod: DropDownHallCode | undefined;
+
+  selectedMeterTest:string="";
 
   @Input()
-  selectedMeter:string|undefined;
+  selectedMeter:string="";
 
   tagValues: tagValueModel[]=[];
 
@@ -39,12 +50,18 @@ export class ReportFilterComponent  implements OnInit{
   }
 
   ngOnInit(): void {
-    this.halls = [
-      { name: 'سالن رنگ 1', code: 'color1' },
-      { name: 'سالن رنگ 2', code: 'color2' },
-      { name: 'سالن رنگ 3', code: 'color3' },
-      { name: 'سالن رنگ 4', code: 'color4' },
-      { name: 'سالن رنگ 5', code: 'color5' }
+    this.hallsType = [
+      { name: 'سالن رنگ', code: HallType.Paint },
+      { name:'سالن بدنه', code: HallType.Body}      
+  ];
+
+  this.hallsCode=
+  [
+    {name: '1', code: '1'},
+    {name: '2', code: '2'},
+    {name: '3', code: '3'},
+    {name: '4', code: '4'},
+    {name: '5', code: '5'}
   ];
 
   this.periods = [
@@ -70,14 +87,17 @@ export class ReportFilterComponent  implements OnInit{
 
   getByFilter()
   {
+    //var color : Meter = Meter[1];
 
     var parameter: filterParameter={
-      hallName: this.selectedHall?.code,
+      hallType: this.selectedHallType?.code,
+      hallCode: this.selectedHallCode?.code,
       startDate: this.datepipe.transform(this.startDate, "yyyy-MM-dd"),
       endDate: this.datepipe.transform(this.endDate, "yyyy-MM-dd"),
-      meter:3,
+      meter:Meter.Electricity,
       period: this.selectedPeriod?.code,
     }
+    console.log(parameter);
 
       this.reportFilterService.getTagValueByFilter(parameter).subscribe({
     next:(tagValues)=>{

@@ -29,9 +29,17 @@
                 <div style="margin: 5%;">
                     <label>نام سالن</label>
                     <div class="card flex justify-content-center">
-                        <p-dropdown name="selectedHall" [options]="halls" [(ngModel)]="selectedHall" optionLabel="name"></p-dropdown>
+                        <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType" optionLabel="name"></p-dropdown>
                     </div>
                     <small class="form-text text-muted">لطفا نام سالن را مشخص نمایید.</small>
+                </div>
+
+                <div style="margin: 5%;">
+                    <label>شماره سالن</label>
+                    <div class="card flex justify-content-center">
+                        <p-dropdown name="selectedHallCode" [options]="hallsCode" [(ngModel)]="selectedHallCode" optionLabel="name"></p-dropdown>
+                    </div>
+                    <small class="form-text text-muted">لطفا شماره سالن را مشخص نمایید.</small>
                 </div>
 
                 <div style="margin: 5%;">
