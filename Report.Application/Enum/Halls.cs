@@ -12,7 +12,7 @@ namespace Report.Application.Enum
     public enum HallType
     {
         Paint = 1,
-        Body =2
+        Body = 2
     }
 
     public enum Meter
@@ -21,5 +21,12 @@ namespace Report.Application.Enum
         Gas = 2,
         CompresAir = 4,
         Electricity = 5,
+    }
+
+    public enum Period
+    {
+        Hour = 1,
+        Day = 2,
+        Month = 3,
     }
 }

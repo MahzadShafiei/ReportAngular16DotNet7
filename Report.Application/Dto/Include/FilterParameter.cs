@@ -11,6 +11,6 @@ namespace Report.Application.Dto.Include
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Meter Meter { get; set; }     
-        public string Period { get; set; }
+        public Period Period { get; set; }
     }
 }

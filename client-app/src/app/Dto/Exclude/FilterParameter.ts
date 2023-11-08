@@ -4,7 +4,7 @@ export interface filterParameter {
     startDate: string | null;
     endDate: string | null;
     meter : Meter | undefined;  
-    period:  string| undefined; 
+    period:  Period| undefined; 
 }
 
 export enum HallType {
@@ -18,4 +18,11 @@ export enum Meter
         Gas = 2,
         CompresAir = 4,
         Electricity = 5,
+    }
+
+export enum Period
+    {
+        Hour = 1,
+        Day = 2,
+        Month = 3,
     }

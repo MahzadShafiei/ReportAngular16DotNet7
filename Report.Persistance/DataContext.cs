@@ -9,9 +9,9 @@ namespace Report.Persistance
         {
         }
 
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<TagValue> TagValues { get; set; }
-        public DbSet<TagInfo_prv> TagInfo_prvs { get; set; }
-        public DbSet<Formula> Formulas { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<TagValue> TagValue { get; set; }
+        public DbSet<TagInfo_prv> TagInfo_prv { get; set; }
+        public DbSet<Formula> Formula { get; set; }
     }
 }

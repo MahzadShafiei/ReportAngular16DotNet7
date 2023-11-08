@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component , OnInit, Input} from '@angular/core';
-import { HallType, Meter, filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
+import { HallType, Meter, Period, filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
 import { tagValueModel } from 'src/app/models/tagValueModel';
 import { ReportFilterService } from 'src/app/services/report-filter.service';
 
@@ -8,6 +8,11 @@ import { ReportFilterService } from 'src/app/services/report-filter.service';
 interface DropDownHallType {
   name: string;
   code: HallType
+}
+
+interface DropDownPeriodType{
+  name: string;
+  code: Period;
 }
 
 interface DropDownHallCode {
@@ -33,8 +38,8 @@ export class ReportFilterComponent  implements OnInit{
   hallsCode: DropDownHallCode[] | undefined;
   selectedHallCode: DropDownHallCode |undefined;
 
-  periods: DropDownHallCode[] | undefined;
-  selectedPeriod: DropDownHallCode | undefined;
+  periods: DropDownPeriodType[] | undefined;
+  selectedPeriod: DropDownPeriodType | undefined;
 
   selectedMeterTest:string="";
 
@@ -65,9 +70,9 @@ export class ReportFilterComponent  implements OnInit{
   ];
 
   this.periods = [
-    { name: 'ساعتی', code: 'hour' },
-    { name: 'روزانه', code: 'day' },
-    { name: 'ماهانه', code: 'month' }
+    { name: 'ساعتی', code: Period.Hour },
+    { name: 'روزانه', code: Period.Day },
+    { name: 'ماهانه', code: Period.Month }
     
   ];
   
@@ -87,14 +92,15 @@ export class ReportFilterComponent  implements OnInit{
 
   getByFilter()
   {
-    //var color : Meter = Meter[1];
-
+    var a= this.selectedMeter;
+    var meter : Meter = Meter[this.selectedMeter as keyof typeof Meter];
+    
     var parameter: filterParameter={
       hallType: this.selectedHallType?.code,
       hallCode: this.selectedHallCode?.code,
       startDate: this.datepipe.transform(this.startDate, "yyyy-MM-dd"),
       endDate: this.datepipe.transform(this.endDate, "yyyy-MM-dd"),
-      meter:Meter.Electricity,
+      meter:meter,
       period: this.selectedPeriod?.code,
     }
     console.log(parameter);
