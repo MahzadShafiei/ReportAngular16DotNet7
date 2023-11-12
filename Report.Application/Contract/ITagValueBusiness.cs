@@ -6,6 +6,6 @@ namespace Report.Application.Contract
     public interface ITagValueBusiness
     {
         Task<List<TagValue>> GetAll();
-        Task<List<TagValue>> GetByFilter(FilterParameter filterParameter);
+        Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter);
     }
 }

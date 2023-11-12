@@ -11,8 +11,4 @@
     <ProjectReference Include="..\Report.Persistance\Report.Persistance.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dto\Exclude\" />
-  </ItemGroup>
-
 </Project>

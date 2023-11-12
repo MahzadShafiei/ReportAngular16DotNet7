@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component , OnInit, Input} from '@angular/core';
 import { HallType, Meter, Period, filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
+import { ChartModel } from 'src/app/Dto/Include/ChartModel';
 import { tagValueModel } from 'src/app/models/tagValueModel';
 import { ReportFilterService } from 'src/app/services/report-filter.service';
 
@@ -47,6 +48,7 @@ export class ReportFilterComponent  implements OnInit{
   selectedMeter:string="";
 
   tagValues: tagValueModel[]=[];
+  chartData: ChartModel[]=[];
 
   loading: boolean = false;
 
@@ -106,8 +108,10 @@ export class ReportFilterComponent  implements OnInit{
     console.log(parameter);
 
       this.reportFilterService.getTagValueByFilter(parameter).subscribe({
-    next:(tagValues)=>{
-      this.tagValues=tagValues;
+    next:(chartData)=>{
+      this.chartData=chartData;
+      console.log(this.chartData);
+      this.setChartData(this.chartData);
     },
     error:(response)=>{
       console.log(response);
@@ -116,7 +120,7 @@ export class ReportFilterComponent  implements OnInit{
   }
 
 
-  setChartData()
+  setChartData(chartData: ChartModel[])
   {    
       
               const documentStyle = getComputedStyle(document.documentElement);
@@ -125,11 +129,13 @@ export class ReportFilterComponent  implements OnInit{
               const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
       
               this.basicData = {
-                  labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                  //labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                  labels: chartData.map(c=> c.label),
                   datasets: [
                       {
                           label: 'Sales',
-                          data: [540, 325, 702, 620],
+                          //data: [540, 325, 702, 620],
+                          data: chartData.map(c=> c.data),
                           backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)'],
                           borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
                           borderWidth: 1

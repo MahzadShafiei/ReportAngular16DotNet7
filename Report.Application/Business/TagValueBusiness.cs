@@ -27,12 +27,12 @@ namespace Report.Application.Business
             return await dataContext.TagValue.ToListAsync();
         }
 
-        public async Task<List<TagValue>> GetByFilter(FilterParameter filterParameter)
+        public async Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter)
         {
             var hallTags = GetHallTags(filterParameter).Result;
             var tagValue = await dataContext.TagValue.Where
                 (c =>
-                 hallTags.Contains(c.Id) &&
+                 hallTags.Contains(c.TagInfoId) &&
                  c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
                  c.Timestamp >= filterParameter.StartDate
                 ).ToListAsync();
@@ -43,16 +43,22 @@ namespace Report.Application.Business
                 case Period.Hour:
                     break;
                 case Period.Day:
-                    var a = tagValue.GroupBy(c => new { Date = c.Timestamp.Day, Month=c.Timestamp.Month })
-                        .ToDictionary(g => g.Key, g => g.Count());
-                        //.Select(c=> new { day = c.Key, item = c.Sum(x=> x.value) } );
+                    //var a = tagValue.GroupBy(c => new { Date = c.Timestamp.Day, Month = c.Timestamp.Month })
+                    //    .ToDictionary(g => g.Key, g => g.Count());
+                    //.Select(c => new { day = c.Key, item = c.Sum(x => x.value) });
+
+
+                    return (tagValue.GroupBy(c => c.Timestamp.Date)
+                        .Select(c=> new ChartModel() { Label=c.Key.ToString(), Data= c.Sum(x=> x.value)})
+                        .ToList());
+                    
                     break;
                 case Period.Month:
                     break;
                 default:
                     break;
             }
-            return new List<TagValue>();
+            return new List<ChartModel>();
         }
 
 
