@@ -1,5 +1,7 @@
-﻿using Report.Application.Dto.Include;
+﻿using Report.Application.Business;
+using Report.Application.Dto.Include;
 using Report.Domain;
+using static Report.Application.Business.TagValueBusiness;
 
 namespace Report.Application.Contract
 {

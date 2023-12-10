@@ -8,5 +8,6 @@
         public int HallType { get; set; }
         public int Meter { get; set; }
         public string SensorCode { get; set; }
+        public int UsagePercent { get; set; }
     }
 }

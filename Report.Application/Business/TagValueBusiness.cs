@@ -2,14 +2,10 @@
 using Report.Application.Contract;
 using Report.Application.Dto.Include;
 using Report.Application.Enum;
+using Report.Application.Model;
 using Report.Domain;
 using Report.Persistance;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Report.Application.Business
 {
@@ -29,29 +25,89 @@ namespace Report.Application.Business
 
         public async Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter)
         {
+            var result1 = new List<ChartModel>();
             var hallTags = GetHallTags(filterParameter).Result;
+
             var tagValue = await dataContext.TagValue.Where
                 (c =>
-                 hallTags.Contains(c.TagInfoId) &&
+                 hallTags.Select(c => c.Key).Contains(c.TagInfoId) &&
                  c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
                  c.Timestamp >= filterParameter.StartDate
                 ).ToListAsync();
 
-            var result= new List<IGrouping<int, TagValue>>();
+            var result = new List<IGrouping<int, TagValue>>();
             switch (filterParameter.Period)
             {
+                case Period.Minute:
+                    break;
                 case Period.Hour:
                     break;
                 case Period.Day:
-                    //var a = tagValue.GroupBy(c => new { Date = c.Timestamp.Day, Month = c.Timestamp.Month })
-                    //    .ToDictionary(g => g.Key, g => g.Count());
-                    //.Select(c => new { day = c.Key, item = c.Sum(x => x.value) });
 
+                    var tagValueGroupingResult = tagValue.GroupBy(x => x.TagInfoId).Select(
+                    tagInfoId => new TagInfoGroup()
+                    {
+                        Key = tagInfoId.Key,
+                        Count = tagInfoId.Count(),
+                        DateGroup = tagInfoId.GroupBy(x => x.Timestamp.Date).Select(
+
+                        timeStampDate =>
+                        
+                            new TimeStampDateGroup()
+                            {
+                                Key = timeStampDate.Key.Date,
+                                //PersianDate = year + "/" + month + "/" + day,
+                                Count = timeStampDate.Count(),
+                                HourGroup = timeStampDate.GroupBy(x => x.Timestamp.Hour).Select(
+                                timeStampHour => new TimeStampHourGroup()
+                                {
+                                    Key = timeStampHour.Key,
+                                    Count = timeStampHour.Count(),
+                                    MainValue = timeStampHour.Average(z => z.value),
+                                    Average = timeStampHour.Average(z => z.value) * ((double)(hallTags.Single(z => z.Key == tagInfoId.Key).Value) / 100),
+                                }
+                                ).ToList()
+                            }
+                        ).ToList(),
+                    }
+                    ).ToList();
+
+                    var a = tagValueGroupingResult.Select(
+                        tagInfoId =>
+
+                        tagInfoId.DateGroup.Select(
+                            timeStampDate =>
+
+                                timeStampDate.HourGroup.OrderBy(c=> c.Key).Select(
+                                    timeStampHour =>
+                                        new ChartModel()
+                                        {
+                                            Label = timeStampDate.Key.ToString().Substring(0,10) + "ساعت: " + timeStampHour.Key,
+                                            Data = (int)timeStampHour.Average,
+                                        }
+                                    ).ToList()
+                            ).ToList()
+                    ).ToList();
+
+                    foreach (var item in a)
+                    {
+                        item.ForEach(
+                            c => c.ForEach(
+                                x =>
+                                {
+                                    if (x.Data != 0)
+                                        result1.Add(x);
+                                }
+                                ));
+                        //result.Add(item);
+                    }
+
+                    return result1;
 
                     return (tagValue.GroupBy(c => c.Timestamp.Date)
-                        .Select(c=> new ChartModel() { Label=c.Key.ToString(), Data= c.Sum(x=> x.value)})
+                        .Select(c => new ChartModel() { Label = c.Key.ToString(), Data = (int)c.Average(x => x.value) })
                         .ToList());
-                    
+
                     break;
                 case Period.Month:
                     break;
@@ -62,7 +118,7 @@ namespace Report.Application.Business
         }
 
 
-        public async Task<List<int>> GetHallTags(FilterParameter filterParameter)
+        public async Task<Dictionary<int, int>> GetHallTags(FilterParameter filterParameter)
         {
             var hallType = (int)filterParameter.HallType;
             var meter = (int)filterParameter.Meter;
@@ -72,12 +128,15 @@ namespace Report.Application.Business
             c.HallType == hallType &&
             c.Meter == meter &&
             c.HallCode == hallCode).ToList()
-            .Select(c => c.SensorCode);
+            .Select(c => new { c.SensorCode, c.UsagePercent });
 
-            var tagInfoPrv = dataContext.TagInfo_prv.Where(c => formula.Contains(c.Name)).ToList()
-                .Select(c => c.Id).ToList();
+            var result = new Dictionary<int, int>();
+            var tagInfoPrv = dataContext.TagInfo_prv.Where(c => formula.Select(c => c.SensorCode).Contains(c.Name)).ToList()
+                .Select(c => new { c.Id, formula.Where(x => x.SensorCode == c.Name).Single().UsagePercent }).ToList();
 
-            return tagInfoPrv;
+            tagInfoPrv.ForEach(c => result.Add(c.Id, c.UsagePercent));
+
+            return result;
         }
     }
 }
