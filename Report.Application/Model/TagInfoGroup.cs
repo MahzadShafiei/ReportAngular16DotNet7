@@ -8,6 +8,6 @@ namespace Report.Application.Model
     {
         public int Key { get; set; }
         public int Count { get; set; }
-        public List<TimeStampDateGroup> DateGroup { get; set; }
+        public List<int> DateGroup { get; set; }
     }
 }

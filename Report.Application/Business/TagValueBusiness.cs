@@ -25,7 +25,7 @@ namespace Report.Application.Business
 
         public async Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter)
         {
-            var result1 = new List<ChartModel>();
+            var result = new List<ChartModel>();
             var hallTags = GetHallTags(filterParameter).Result;
 
             var tagValue = await dataContext.TagValue.Where
@@ -34,8 +34,8 @@ namespace Report.Application.Business
                  c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
                  c.Timestamp >= filterParameter.StartDate
                 ).ToListAsync();
-
-            var result = new List<IGrouping<int, TagValue>>();
+            
+            
             switch (filterParameter.Period)
             {
                 case Period.Minute:
@@ -44,71 +44,35 @@ namespace Report.Application.Business
                     break;
                 case Period.Day:
 
-                    var tagValueGroupingResult = tagValue.GroupBy(x => x.TagInfoId).Select(
-                    tagInfoId => new TagInfoGroup()
-                    {
-                        Key = tagInfoId.Key,
-                        Count = tagInfoId.Count(),
-                        DateGroup = tagInfoId.GroupBy(x => x.Timestamp.Date).Select(
+                    tagValue.Where(c => c.value != 0)
+                        .GroupBy(x => x.TagInfoId).ToList().ForEach(
+
+                    tagInfoId =>
+                        tagInfoId.GroupBy(x => x.Timestamp.Date)
+                            .OrderBy(c => c.Key).ToList().ForEach(
 
                         timeStampDate =>
-                        
-                            new TimeStampDateGroup()
-                            {
-                                Key = timeStampDate.Key.Date,
-                                //PersianDate = year + "/" + month + "/" + day,
-                                Count = timeStampDate.Count(),
-                                HourGroup = timeStampDate.GroupBy(x => x.Timestamp.Hour).Select(
-                                timeStampHour => new TimeStampHourGroup()
-                                {
-                                    Key = timeStampHour.Key,
-                                    Count = timeStampHour.Count(),
-                                    MainValue = timeStampHour.Average(z => z.value),
-                                    Average = timeStampHour.Average(z => z.value) * ((double)(hallTags.Single(z => z.Key == tagInfoId.Key).Value) / 100),
-                                }
-                                ).ToList()
-                            }
-                        ).ToList(),
-                    }
-                    ).ToList();
+                        {
+                            var persianCalendar = new PersianCalendar();
+                            int year = persianCalendar.GetYear(timeStampDate.Key);
+                            int month = persianCalendar.GetMonth(timeStampDate.Key);
+                            int day = persianCalendar.GetDayOfMonth(timeStampDate.Key);
+                            var persianDate = year + "/" + month + "/" + day;
 
-                    var a = tagValueGroupingResult.Select(
-                        tagInfoId =>
+                            timeStampDate.GroupBy(x => x.Timestamp.Hour)
+                                    .OrderBy(c => c.Key).ToList().ForEach(
 
-                        tagInfoId.DateGroup.Select(
-                            timeStampDate =>
+                                timeStampHour =>
+                                    result.Add(new ChartModel()
+                                    {
+                                        Label = persianDate + "ساعت: " + timeStampHour.Key,
+                                        Data = (int)(timeStampHour.Average(z => z.value) * ((double)(hallTags.Single(z => z.Key == tagInfoId.Key).Value) / 100)),
+                                    }));
+                        })
+                    );
 
-                                timeStampDate.HourGroup.OrderBy(c=> c.Key).Select(
-                                    timeStampHour =>
-                                        new ChartModel()
-                                        {
-                                            Label = timeStampDate.Key.ToString().Substring(0,10) + "ساعت: " + timeStampHour.Key,
-                                            Data = (int)timeStampHour.Average,
-                                        }
-                                    ).ToList()
-                            ).ToList()
-                    ).ToList();
+                    return result;
 
-                    foreach (var item in a)
-                    {
-                        item.ForEach(
-                            c => c.ForEach(
-                                x =>
-                                {
-                                    if (x.Data != 0)
-                                        result1.Add(x);
-                                }
-                                ));
-                        //result.Add(item);
-                    }
-
-                    return result1;
-
-                    return (tagValue.GroupBy(c => c.Timestamp.Date)
-                        .Select(c => new ChartModel() { Label = c.Key.ToString(), Data = (int)c.Average(x => x.value) })
-                        .ToList());
-
-                    break;
                 case Period.Month:
                     break;
                 default:
