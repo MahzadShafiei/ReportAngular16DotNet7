@@ -34,8 +34,8 @@ namespace Report.Application.Business
                  c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
                  c.Timestamp >= filterParameter.StartDate
                 ).ToListAsync();
-            
-            
+
+
             switch (filterParameter.Period)
             {
                 case Period.Minute:
@@ -63,11 +63,38 @@ namespace Report.Application.Business
                                     .OrderBy(c => c.Key).ToList().ForEach(
 
                                 timeStampHour =>
-                                    result.Add(new ChartModel()
+                                {
+                                    var lowMinute = 0;
+                                    var highMinute = 4;
+                                    var dataDic = new Dictionary<int, int>();
+
+                                    timeStampHour.GroupBy(x => x.Timestamp.Minute)
+                                    .OrderBy(c => c.Key).ToList().ForEach(
+                                        timeStampMinute =>
+                                        {
+                                            dataDic.Add(timeStampMinute.Key, (int)(timeStampMinute.Average(z => z.value) * ((double)(hallTags.Single(z => z.Key == tagInfoId.Key).Value) / 100)));
+
+                                        });
+
+                                    do
                                     {
-                                        Label = persianDate + "ساعت: " + timeStampHour.Key,
-                                        Data = (int)(timeStampHour.Average(z => z.value) * ((double)(hallTags.Single(z => z.Key == tagInfoId.Key).Value) / 100)),
-                                    }));
+                                        var finalList = dataDic.ToList().Where(x => x.Key <= highMinute && lowMinute <= x.Key).ToList();
+
+                                        if (finalList.Any())
+                                            result.Add(new ChartModel()
+                                            {
+                                                Label = persianDate + "ساعت: " + timeStampHour.Key + ":" + lowMinute,
+                                                Data = (int)finalList.Average(x => x.Value),
+                                            });
+
+                                        lowMinute += 5;
+                                        highMinute += 5;
+                                    } while (highMinute < 60);
+
+
+
+
+                                });
                         })
                     );
 
