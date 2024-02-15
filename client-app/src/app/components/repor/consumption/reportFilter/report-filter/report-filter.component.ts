@@ -72,6 +72,7 @@ export class ReportFilterComponent  implements OnInit{
   ];
 
   this.periods = [
+    { name: 'دقیقه ای', code: Period.Minute },
     { name: 'ساعتی', code: Period.Hour },
     { name: 'روزانه', code: Period.Day },
     { name: 'ماهانه', code: Period.Month }
