@@ -54,6 +54,11 @@
                     <p-button label="جست و جو" [loading]="loading" (onClick)="load()"></p-button>
                 </div>
 
+                <div style="margin: 5%;">
+                    <p-button label="میزان مصرف" (onClick)="calculateAssumption()"></p-button>
+                    <label style="margin-right: 10%;">{{calculatedAssumption}}</label>
+                </div>
+                
             </div>
             </form>
         </div>

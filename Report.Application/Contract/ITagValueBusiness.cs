@@ -9,5 +9,6 @@ namespace Report.Application.Contract
     {
         Task<List<TagValue>> GetAll();
         Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter);
+        Task<int> GetCalculatedAssumption(FilterParameter filterParameter);
     }
 }

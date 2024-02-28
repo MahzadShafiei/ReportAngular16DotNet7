@@ -31,5 +31,13 @@ namespace Report.Api.Controllers
             var result = await tagValueBusiness.GetByFilter(filterParameter);
             return Ok(result);            
         }
+
+        [HttpGet]
+        [Route("GetCalculatedAssumption")]
+        public async Task<IActionResult> GetCalculatedAssumption([FromQuery] FilterParameter filterParameter)
+        {
+            var result= await tagValueBusiness.GetCalculatedAssumption(filterParameter);
+            return Ok(result);
+        }
     }
 }

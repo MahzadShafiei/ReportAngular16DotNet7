@@ -70,7 +70,7 @@ namespace Report.Application.Business
             c.HallCode == hallCode).ToList()
             .Select(c => new { c.SensorCode, c.UsagePercent });
 
-            var result = new Dictionary<int, int>();
+            var result = new Dictionary<int, int>();            
             var tagInfoPrv = dataContext.TagInfo.Where(c => formula.Select(c => c.SensorCode).Contains(c.Name)).ToList()
                 .Select(c => new { c.Id, formula.Where(x => x.SensorCode == c.Name).Single().UsagePercent }).ToList();
 
@@ -150,6 +150,23 @@ namespace Report.Application.Business
                 Data = (int)(timeStampDate.Average(z => z.value) * ((double)(hallTags.Single(z => z.Key == tagInfoId).Value) / 100)),
             });
 
+        }
+    
+        public async Task<int> GetCalculatedAssumption(FilterParameter filterParameter)
+        {
+            var hallTags = await GetHallTags(filterParameter);
+
+            var tagValue = await dataContext.TagValue.Where
+                (c =>
+                 hallTags.Select(c => c.Key).Contains(c.Id) &&
+                 c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
+                 c.Timestamp >= filterParameter.StartDate &&
+                 c.value != 0
+                ).ToListAsync();
+
+            var orderedResult = tagValue.OrderBy(c => c.Timestamp).ToList();
+
+            return ((int)orderedResult.Last().value - (int)orderedResult.First().value);
         }
     }
 }

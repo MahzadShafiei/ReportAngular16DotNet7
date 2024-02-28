@@ -26,5 +26,15 @@ export class ReportFilterService {
       }
     );    
   }
-  
+
+  getCalculatedAssumption(parameters:filterParameter):Observable<number>
+  {
+    var getByFilterParameter= new HttpParams ({fromObject:parameters as any});
+
+    return this.http.get<number>(
+        this.baseURLApi+'/api/TagValue/GetCalculatedAssumption', {
+          params: getByFilterParameter
+        }
+    );
+  }  
 }

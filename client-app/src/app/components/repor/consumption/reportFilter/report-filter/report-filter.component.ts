@@ -30,6 +30,8 @@ export class ReportFilterComponent  implements OnInit{
   basicData: any;
   basicOptions: any;
 
+  calculatedAssumption:any;
+
   startDate: Date = new Date();
   endDate: Date = new Date();
 
@@ -75,7 +77,7 @@ export class ReportFilterComponent  implements OnInit{
     { name: 'دقیقه ای', code: Period.Minute },
     { name: 'ساعتی', code: Period.Hour },
     { name: 'روزانه', code: Period.Day },
-    { name: 'ماهانه', code: Period.Month }
+    //{ name: 'ماهانه', code: Period.Month }
     
   ];
   
@@ -91,11 +93,11 @@ export class ReportFilterComponent  implements OnInit{
         this.loading = false
     }, 2000);
 
-  }
+  }  
 
-  getByFilter()
+  //ایجاد آبجکت پارامتر ورودی سرویس
+  makeParameter()
   {
-    var a= this.selectedMeter;
     var meter : Meter = Meter[this.selectedMeter as keyof typeof Meter];
     
     var parameter: filterParameter={
@@ -105,8 +107,31 @@ export class ReportFilterComponent  implements OnInit{
       endDate: this.datepipe.transform(this.endDate, "yyyy-MM-dd"),
       meter:meter,
       period: this.selectedPeriod?.code,
-    }
-    console.log(parameter);
+    }   
+
+    return parameter;
+  }
+
+  calculateAssumption()
+  {
+    var parameter= this.makeParameter();
+
+    this.reportFilterService.getCalculatedAssumption(parameter).subscribe({
+      next:(number)=>{
+        this.calculatedAssumption=number;
+        console.log(number);
+      },
+      error:(response)=>{
+        console.log(response);
+      }
+    })
+  }
+  
+
+  getByFilter()
+  {
+
+    var parameter= this.makeParameter();
 
       this.reportFilterService.getTagValueByFilter(parameter).subscribe({
     next:(chartData)=>{
