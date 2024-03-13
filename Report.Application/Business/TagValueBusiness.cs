@@ -23,9 +23,14 @@ namespace Report.Application.Business
             return await dataContext.TagValue.ToListAsync();
         }
 
-        public async Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter)
+        /// <summary>
+        /// جمع آوری دیتای مربوطه به فیلتر درخواستی برای نمایش گراف
+        /// </summary>
+        /// <param name="filterParameter"></param>
+        /// <returns></returns>
+        public async Task<List<ChartModel>> GetGraphDataByFilter(FilterParameter filterParameter)
         {
-            var hallTags = await GetHallTags(filterParameter);
+            var hallTags = await GetHallTags(filterParameter, false);
 
             var tagValue = await dataContext.TagValue.Where
                 (c =>
@@ -36,43 +41,75 @@ namespace Report.Application.Business
                 ).ToListAsync();
 
             return await CalculateDate(tagValue, hallTags, filterParameter.Period);
-
-            //switch (filterParameter.Period)
-            //{
-            //    case Period.Minute:
-
-            //        return await CalculateDate(tagValue, hallTags, filterParameter.Period);
-
-            //    case Period.Hour:
-            //        break;
-            //    case Period.Day:
-
-            //        return await CalculateDate(tagValue, hallTags, filterParameter.Period);
-
-            //    case Period.Month:
-            //        break;
-            //    default:
-            //        break;
-            //}
-            //return new List<ChartModel>();
         }
 
-
-        public async Task<Dictionary<int, int>> GetHallTags(FilterParameter filterParameter)
+        /// <summary>
+        /// محاسبه ی دیتای مصرفی برای هر کنتور با توجه به فیلتر ورودی
+        /// </summary>
+        /// <param name="filterParameter"></param>
+        /// <returns></returns>
+        public async Task<int> GetCalculatedAssumptionByFilter(FilterParameter filterParameter)
         {
+            var hallTags = await GetHallTags(filterParameter, true);
+
+            var tagValue = await dataContext.TagValue.Where
+                (c =>
+                 hallTags.Select(c => c.Key).Contains(c.Id) &&
+                 c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
+                 c.Timestamp >= filterParameter.StartDate &&
+                 c.value != 0
+                ).ToListAsync();
+
+            var orderedResult = tagValue.OrderBy(c => c.Timestamp).ToList();           
+
+            return ((int)orderedResult.Last().value - (int)orderedResult.First().value);
+        }
+
+        /// <summary>
+        /// تحویل تگ های مربوطه با توجه به سالن و فیلتر درخواستی
+        /// </summary>
+        /// <param name="filterParameter"></param>
+        /// <returns></returns>
+        public async Task<Dictionary<int, int>> GetHallTags(FilterParameter filterParameter, bool IsAssupmtion)
+        {
+            var endsString = string.Empty;
+            switch (filterParameter.Meter)
+            {
+                case Meter.Water:
+                    endsString = IsAssupmtion ? EndStringAssumption.Water : EndStringPower.Water;
+                    break;
+                case Meter.Gas:
+                    endsString = IsAssupmtion ? EndStringAssumption.Gas : EndStringPower.Gas;
+                    break;
+                case Meter.CompresAir:
+                    endsString = IsAssupmtion ? EndStringAssumption.CompresAir : EndStringPower.CompresAir;
+                    break;
+                case Meter.Electricity:
+                    endsString= IsAssupmtion? EndStringAssumption.Electricity : EndStringPower.Electricity;
+                    break;
+                default:
+                    break;
+            }            
+            
             var hallType = (int)filterParameter.HallType;
             var meter = (int)filterParameter.Meter;
-            var hallCode = Convert.ToInt32(filterParameter.HallCode);
+            var hallCode = Convert.ToInt32(filterParameter.HallCode);            
 
             var formula = dataContext.Formula.Where(c =>
             c.HallType == hallType &&
             c.Meter == meter &&
-            c.HallCode == hallCode).ToList()
+            c.HallCode == hallCode &&
+            c.SensorCode.EndsWith(endsString)
+            ).ToList()
             .Select(c => new { c.SensorCode, c.UsagePercent });
 
             var result = new Dictionary<int, int>();            
             var tagInfoPrv = dataContext.TagInfo.Where(c => formula.Select(c => c.SensorCode).Contains(c.Name)).ToList()
                 .Select(c => new { c.Id, formula.Where(x => x.SensorCode == c.Name).Single().UsagePercent }).ToList();
+
+            //var tagInfo = (from c in formula
+            //               join t in tags on c.SensorCode equals t.Name
+            //               select new { t.Id, c.UsagePercent }).ToList();
 
             tagInfoPrv.ForEach(c => result.Add(c.Id, c.UsagePercent));
 
@@ -152,21 +189,6 @@ namespace Report.Application.Business
 
         }
     
-        public async Task<int> GetCalculatedAssumption(FilterParameter filterParameter)
-        {
-            var hallTags = await GetHallTags(filterParameter);
-
-            var tagValue = await dataContext.TagValue.Where
-                (c =>
-                 hallTags.Select(c => c.Key).Contains(c.Id) &&
-                 c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
-                 c.Timestamp >= filterParameter.StartDate &&
-                 c.value != 0
-                ).ToListAsync();
-
-            var orderedResult = tagValue.OrderBy(c => c.Timestamp).ToList();
-
-            return ((int)orderedResult.Last().value - (int)orderedResult.First().value);
-        }
+       
     }
 }

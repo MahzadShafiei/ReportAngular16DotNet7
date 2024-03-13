@@ -21,7 +21,7 @@ export class ReportFilterService {
     var getByFilterParameter= new HttpParams ({fromObject:parameters as any});
 
     return this.http.get<ChartModel[]>(
-      this.baseURLApi + '/api/TagValue/GetByFilter', {
+      this.baseURLApi + '/api/TagValue/GetGraphDataByFilter', {
         params: getByFilterParameter
       }
     );    
@@ -32,7 +32,7 @@ export class ReportFilterService {
     var getByFilterParameter= new HttpParams ({fromObject:parameters as any});
 
     return this.http.get<number>(
-        this.baseURLApi+'/api/TagValue/GetCalculatedAssumption', {
+        this.baseURLApi+'/api/TagValue/GetCalculatedAssumptionByFilter', {
           params: getByFilterParameter
         }
     );

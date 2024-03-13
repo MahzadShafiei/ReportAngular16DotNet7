@@ -25,18 +25,18 @@ namespace Report.Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetByFilter")]
-        public async Task<IActionResult> GetByFilter([FromQuery]FilterParameter filterParameter)
+        [Route("GetGraphDataByFilter")]
+        public async Task<IActionResult> GetGraphDataByFilter([FromQuery]FilterParameter filterParameter)
         {
-            var result = await tagValueBusiness.GetByFilter(filterParameter);
+            var result = await tagValueBusiness.GetGraphDataByFilter(filterParameter);
             return Ok(result);            
         }
 
         [HttpGet]
-        [Route("GetCalculatedAssumption")]
-        public async Task<IActionResult> GetCalculatedAssumption([FromQuery] FilterParameter filterParameter)
+        [Route("GetCalculatedAssumptionByFilter")]
+        public async Task<IActionResult> GetCalculatedAssumptionByFilter([FromQuery] FilterParameter filterParameter)
         {
-            var result= await tagValueBusiness.GetCalculatedAssumption(filterParameter);
+            var result= await tagValueBusiness.GetCalculatedAssumptionByFilter(filterParameter);
             return Ok(result);
         }
     }

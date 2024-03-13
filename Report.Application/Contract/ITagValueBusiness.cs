@@ -8,7 +8,7 @@ namespace Report.Application.Contract
     public interface ITagValueBusiness
     {
         Task<List<TagValue>> GetAll();
-        Task<List<ChartModel>> GetByFilter(FilterParameter filterParameter);
-        Task<int> GetCalculatedAssumption(FilterParameter filterParameter);
+        Task<List<ChartModel>> GetGraphDataByFilter(FilterParameter filterParameter);
+        Task<int> GetCalculatedAssumptionByFilter(FilterParameter filterParameter);
     }
 }
