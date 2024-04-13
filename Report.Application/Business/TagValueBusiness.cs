@@ -52,17 +52,25 @@ namespace Report.Application.Business
         {
             var hallTags = await GetHallTags(filterParameter, true);
 
-            var tagValue = await dataContext.TagValue.Where
+            var tagValue = dataContext.TagValue.Where
                 (c =>
                  hallTags.Select(c => c.Key).Contains(c.Id) &&
                  c.Timestamp <= filterParameter.EndDate.AddDays(1) &&
                  c.Timestamp >= filterParameter.StartDate &&
                  c.value != 0
-                ).ToListAsync();
+                ).ToList();
 
-            var orderedResult = tagValue.OrderBy(c => c.Timestamp).ToList();           
+            Single? totalFirst = 0;
+            Single? totalEnd = 0;
 
-            return ((int)orderedResult.Last().value - (int)orderedResult.First().value);
+            tagValue.GroupBy(c => c.Id).ToList().ForEach(hallTag =>
+            {
+                var orderedResult = hallTag.OrderBy(c => c.Timestamp).ToList();
+                totalFirst += orderedResult.First().value;
+                totalEnd += orderedResult.Last().value;
+            });
+
+            return ((int)totalEnd - (int)totalFirst);
         }
 
         /// <summary>
@@ -85,15 +93,15 @@ namespace Report.Application.Business
                     endsString = IsAssupmtion ? EndStringAssumption.CompresAir : EndStringPower.CompresAir;
                     break;
                 case Meter.Electricity:
-                    endsString= IsAssupmtion? EndStringAssumption.Electricity : EndStringPower.Electricity;
+                    endsString = IsAssupmtion ? EndStringAssumption.Electricity : EndStringPower.Electricity;
                     break;
                 default:
                     break;
-            }            
-            
+            }
+
             var hallType = (int)filterParameter.HallType;
             var meter = (int)filterParameter.Meter;
-            var hallCode = Convert.ToInt32(filterParameter.HallCode);            
+            var hallCode = Convert.ToInt32(filterParameter.HallCode);
 
             var formula = dataContext.Formula.Where(c =>
             c.HallType == hallType &&
@@ -103,7 +111,7 @@ namespace Report.Application.Business
             ).ToList()
             .Select(c => new { c.SensorCode, c.UsagePercent });
 
-            var result = new Dictionary<int, int>();            
+            var result = new Dictionary<int, int>();
             var tagInfoPrv = dataContext.TagInfo.Where(c => formula.Select(c => c.SensorCode).Contains(c.Name)).ToList()
                 .Select(c => new { c.Id, formula.Where(x => x.SensorCode == c.Name).Single().UsagePercent }).ToList();
 
@@ -188,7 +196,7 @@ namespace Report.Application.Business
             });
 
         }
-    
-       
+
+
     }
 }
