@@ -1,67 +1,90 @@
 <div class="container-fluid">
-    <div class="row">        
+    <div class="row">
         <div class="col-10">
-        <div class="card">
-            <p-chart type="line" [data]="basicData" [options]="basicOptions"></p-chart>
-        </div>
+            <div class="card">
+                <p-chart type="line" [data]="basicData" [options]="basicOptions"></p-chart>
+            </div>
         </div>
 
         <div class="col-2">
             <form>
-                {{selectedMeter}}
-                <div style="margin: 5%;">
-                <div class="form-group">
-                <label>تاریخ شروع</label>             
-                <div class="card flex justify-content-center">
-                    <p-calendar name="startDate" [(ngModel)]="startDate" placeholder="started date" class="form-control"></p-calendar>                
-                </div>
-                <small class="form-text text-muted">لطفا تاریخ شروع را مشخص نمایید.</small>
-                </div>
+                <!-- {{selectedMeter}} -->
+                <div>
 
-                <div style="margin: 5%;">
-                <label>تاریخ پایان</label>
-                <div class="card flex justify-content-center">
-                    <p-calendar name="endDate" [(ngModel)]="endDate" placeholder="end date" class="form-control"></p-calendar>
-                </div>
-                <small class="form-text text-muted">لطفا تاریخ پایان را مشخص نمایید.</small>
-                </div>     
-
-                <div style="margin: 5%;">
-                    <label>نام سالن</label>
-                    <div class="card flex justify-content-center">
-                        <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType" optionLabel="name"></p-dropdown>
+                    <div class="form-group">
+                        <label>نام شرکت: شرکت ایران خودرو</label>
                     </div>
-                    <small class="form-text text-muted">لطفا نام سالن را مشخص نمایید.</small>
-                </div>
+                    <br />
 
-                <div style="margin: 5%;">
-                    <label>شماره سالن</label>
-                    <div class="card flex justify-content-center">
-                        <p-dropdown name="selectedHallCode" [options]="hallsCode" [(ngModel)]="selectedHallCode" optionLabel="name"></p-dropdown>
+                    <div class="form-group">
+                        <label>نام معاونت</label>
+                        <div class="card flex justify-content-center">
+                            <p-dropdown name="selectedHall" [options]="assistanceTypes" [(ngModel)]="selectedAssistance"
+                                optionLabel="name"></p-dropdown>
+                        </div>
                     </div>
-                    <small class="form-text text-muted">لطفا شماره سالن را مشخص نمایید.</small>
-                </div>
 
-                <div style="margin: 5%;">
-                    <label>دوره ی نمایش</label>
-                    <div class="card flex justify-content-center">
-                        <p-dropdown name="selectedPeriod" [options]="periods" [(ngModel)]="selectedPeriod" optionLabel="name"></p-dropdown>
+                    <div class="form-group">
+                        <label>نام مدیریت</label>
+                        <div class="card flex justify-content-center">
+                            <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType"
+                                optionLabel="name"></p-dropdown>
+                        </div>
                     </div>
-                    <small class="form-text text-muted">لطفا دوره ی نمایش را مشخص نمایید.</small>
-                </div>
 
-                <div style="margin: 5%;">
-                    <p-button label="جست و جو" [loading]="loading" (onClick)="load()"></p-button>
-                </div>
+                    <div class="form-group">
+                        <label>نام سالن</label>
+                        <div class="card flex justify-content-center">
+                            <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType"
+                                optionLabel="name"></p-dropdown>
+                        </div>
+                    </div>
 
-                <div style="margin: 5%;">
-                    <p-button label="میزان مصرف" (onClick)="calculateAssumption()"></p-button>
-                    <label style="margin-right: 10%;">{{calculatedAssumption}}</label>
+                    <div class="form-group">
+                        <label>شماره سالن</label>
+                        <div class="card flex justify-content-center">
+                            <p-dropdown name="selectedHallCode" [options]="hallsCode" [(ngModel)]="selectedHallCode"
+                                optionLabel="name"></p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>دوره ی نمایش</label>
+                        <div class="card flex justify-content-center">
+                            <p-dropdown name="selectedPeriod" [options]="periods" [(ngModel)]="selectedPeriod"
+                                optionLabel="name"></p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>تاریخ شروع</label>
+                        <div class="card flex justify-content-center">
+                            <p-calendar name="startDate" [(ngModel)]="startDate" placeholder="started date"
+                                class="form-control"></p-calendar>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>تاریخ پایان</label>
+                        <div class="card flex justify-content-center">
+                            <p-calendar name="endDate" [(ngModel)]="endDate" placeholder="end date"
+                                class="form-control"></p-calendar>
+                        </div>
+                    </div>
+
+
+                    <div style="margin: 5%;">
+                        <p-button label="جست و جو" [loading]="loading" (onClick)="load()"></p-button>
+                    </div>
+
+                    <div style="margin: 5%;">
+                        <p-button label="میزان مصرف" (onClick)="calculateAssumption()"></p-button>
+                        <label style="margin-right: 10%;">{{calculatedAssumption}}</label>
+                    </div>
+
                 </div>
-                
-            </div>
             </form>
         </div>
-   
+
     </div>
 </div>

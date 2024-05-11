@@ -13,5 +13,6 @@ namespace Report.Persistance
         public DbSet<TagValue> TagValue { get; set; }
         public DbSet<TagInfo> TagInfo { get; set; }
         public DbSet<Formula> Formula { get; set; }
+        public DbSet<Management> Management { get; set; }
     }
 }

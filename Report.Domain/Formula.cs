@@ -9,5 +9,6 @@
         public int Meter { get; set; }
         public string SensorCode { get; set; }
         public int UsagePercent { get; set; }
+        public int ManagementId { get; set; }
     }
 }

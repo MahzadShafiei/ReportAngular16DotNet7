@@ -10,5 +10,6 @@ namespace Report.Application.Contract
         Task<List<TagValue>> GetAll();
         Task<List<ChartModel>> GetGraphDataByFilter(FilterParameter filterParameter);
         Task<int> GetCalculatedAssumptionByFilter(FilterParameter filterParameter);
+        Task<List<Management>> GetManagementByParameter(int parentId);
     }
 }

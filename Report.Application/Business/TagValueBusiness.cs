@@ -186,7 +186,6 @@ namespace Report.Application.Business
             return result;
         }
 
-
         public void FillDailyResult(List<ChartModel> result, string persianDate, IGrouping<DateTime, TagValue> timeStampDate, Dictionary<int, int> hallTags, int tagInfoId)
         {
             result.Add(new ChartModel()
@@ -197,6 +196,11 @@ namespace Report.Application.Business
 
         }
 
+        public async Task<List<Management>> GetManagementByParameter(int parentId)
+        {
+            var assistance = dataContext.Management.Where(c => c.ParentId == parentId);
+            return assistance.ToList();
+        }
 
     }
 }
