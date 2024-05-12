@@ -61,6 +61,11 @@ export class ReportFilterComponent implements OnInit {
   constructor(private reportFilterService: ReportFilterService, private datepipe: DatePipe) {
   }
 
+//   onChange(event) {
+//     console.log('event :' + event);
+//     console.log(event.value);
+// }
+
   ngOnInit(): void {
     this.reportFilterService.GetManagementByParameter(1).subscribe({
       next: (assitances) => {
