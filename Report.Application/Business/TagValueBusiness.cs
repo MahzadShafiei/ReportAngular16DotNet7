@@ -74,7 +74,7 @@ namespace Report.Application.Business
         }
 
         /// <summary>
-        /// تحویل تگ های مربوطه با توجه به سالن و فیلتر درخواستی
+        /// تحویل تک های مربوطه با توجه به سالن و فیلتر درخواستی
         /// </summary>
         /// <param name="filterParameter"></param>
         /// <returns></returns>
@@ -99,12 +99,14 @@ namespace Report.Application.Business
                     break;
             }
 
-            var hallType = (int)filterParameter.HallType;
+            //var hallType = (int)filterParameter.HallType;
+            var unitId = filterParameter.HallType;
             var meter = (int)filterParameter.Meter;
             var hallCode = Convert.ToInt32(filterParameter.HallCode);
 
             var formula = dataContext.Formula.Where(c =>
-            c.HallType == hallType &&
+            //c.HallType == hallType &&
+            unitId != 0 ? c.UnitId == unitId : true &&
             c.Meter == meter &&
             c.HallCode == hallCode &&
             c.SensorCode.EndsWith(endsString)
@@ -196,9 +198,9 @@ namespace Report.Application.Business
 
         }
 
-        public async Task<List<Management>> GetManagementByParameter(int parentId)
+        public async Task<List<Unit>> GetManagementByParameter(int parentId)
         {
-            var assistance = dataContext.Management.Where(c => c.ParentId == parentId);
+            var assistance = dataContext.Unit.Where(c => c.ParentId == parentId);
             return assistance.ToList();
         }
 

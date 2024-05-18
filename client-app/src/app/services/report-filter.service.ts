@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { filterParameter } from '../Dto/Exclude/FilterParameter';
 import { ChartModel } from '../Dto/Include/ChartModel';
-import { managementModel } from 'src/app/models/managementModel';
+import { unitModel } from 'src/app/models/unitModel';
 
 @Injectable({
   providedIn: 'root'
@@ -37,8 +37,8 @@ export class ReportFilterService {
     );
   }
 
-  GetManagementByParameter(parentId: number): Observable<managementModel[]> {
-    return this.http.get<managementModel[]>(this.baseURLApi + '/api/TagValue/GetManagementByParameter?parentId=' + parentId);
+  GetUnitsByParameter(parentId: number): Observable<unitModel[]> {
+    return this.http.get<unitModel[]>(this.baseURLApi + '/api/TagValue/GetUnitsByParameter?parentId=' + parentId);
   }
 
 

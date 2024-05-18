@@ -40,8 +40,8 @@ namespace Report.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetManagementByParameter")]
-        public async Task<IActionResult> GetManagementByParameter(int parentId)
+        [HttpGet("GetUnitsByParameter")]
+        public async Task<IActionResult> GetUnitsByParameter(int parentId)
         {
             var result = await tagValueBusiness.GetManagementByParameter(parentId);
             return Ok(result);

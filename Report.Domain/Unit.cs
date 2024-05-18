@@ -2,7 +2,7 @@
 
 namespace Report.Domain
 {
-    public class Management
+    public class Unit
     {
         [Key]
         public int Id { get; set; }

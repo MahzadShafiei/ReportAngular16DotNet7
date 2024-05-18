@@ -1,16 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
-import { HallType, Meter, Period, filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
+import { Meter, Period, filterParameter } from 'src/app/Dto/Exclude/FilterParameter';
 import { ChartModel } from 'src/app/Dto/Include/ChartModel';
-import { managementModel } from 'src/app/models/managementModel';
+import { unitModel } from 'src/app/models/unitModel';
 import { tagValueModel } from 'src/app/models/tagValueModel';
 import { ReportFilterService } from 'src/app/services/report-filter.service';
 
-
-interface DropDownHallType {
-  name: string;
-  code: HallType
-}
 
 interface DropDownPeriodType {
   name: string;
@@ -36,11 +31,14 @@ export class ReportFilterComponent implements OnInit {
   startDate: Date = new Date();
   endDate: Date = new Date();
 
-  assistanceTypes: managementModel[] = [];
-  selectedAssistance: managementModel | undefined;
+  assistanceTypes: unitModel[] = [];
+  selectedAssistance: unitModel | undefined;
 
-  hallsType: DropDownHallType[] | undefined;
-  selectedHallType: DropDownHallType | undefined;
+  managementTypes: unitModel[] = [];
+  selectedManagement: unitModel | undefined;
+
+  hallsType: unitModel[] | undefined;
+  selectedHallType: unitModel | undefined;
 
   hallsCode: DropDownHallCode[] | undefined;
   selectedHallCode: DropDownHallCode | undefined;
@@ -61,13 +59,31 @@ export class ReportFilterComponent implements OnInit {
   constructor(private reportFilterService: ReportFilterService, private datepipe: DatePipe) {
   }
 
-//   onChange(event) {
-//     console.log('event :' + event);
-//     console.log(event.value);
-// }
+  onChangeManagement(){
+    this.reportFilterService.GetUnitsByParameter(Number(this.selectedManagement?.id)).subscribe({
+      next: (management) => {        
+        this.hallsType = management;       
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+  }
+
+  onChangeAssistance() {    
+    this.reportFilterService.GetUnitsByParameter(Number(this.selectedAssistance?.id)).subscribe({
+      next: (management) => {        
+        this.managementTypes = management;       
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.reportFilterService.GetManagementByParameter(1).subscribe({
+
+    this.reportFilterService.GetUnitsByParameter(1).subscribe({
       next: (assitances) => {
         console.log(assitances);
         this.assistanceTypes = assitances;
@@ -77,16 +93,6 @@ export class ReportFilterComponent implements OnInit {
         console.log(response);
       }
     });
-
-    // this.assistanceTypes = [
-    //   { name: 'تست1', id: 11, parentId: 22 },
-    //   { name: 'تست21', id: 12, parentId: 23 }
-    // ];
-
-    this.hallsType = [
-      { name: 'سالن رنگ', code: HallType.Paint },
-      { name: 'سالن بدنه', code: HallType.Body }
-    ];
 
     this.hallsCode =
       [
@@ -108,8 +114,7 @@ export class ReportFilterComponent implements OnInit {
   }
 
   //جست و جوی دیتای 
-  load() {
-    var a = this.selectedAssistance;
+  load() {    
     this.loading = true;
     this.getByFilter();
 
@@ -124,7 +129,9 @@ export class ReportFilterComponent implements OnInit {
     var meter: Meter = Meter[this.selectedMeter as keyof typeof Meter];
 
     var parameter: filterParameter = {
-      hallType: this.selectedHallType?.code,
+      assisttanceType: this.selectedAssistance?.id,
+      managementType: this.selectedManagement?.id,
+      hallType: this.selectedHallType?.id,
       hallCode: this.selectedHallCode?.code,
       startDate: this.datepipe.transform(this.startDate, "yyyy-MM-dd"),
       endDate: this.datepipe.transform(this.endDate, "yyyy-MM-dd"),

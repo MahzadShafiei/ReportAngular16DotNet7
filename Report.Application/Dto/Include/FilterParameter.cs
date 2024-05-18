@@ -1,12 +1,15 @@
 ﻿using Microsoft.VisualBasic;
 using Report.Application.Enum;
+using Report.Domain;
 
 namespace Report.Application.Dto.Include
 {
     
     public class FilterParameter
-    {        
-        public HallType HallType { get; set; }
+    {
+        public int? AssisttanceType { get; set; }
+        public int? ManagementType { get; set; }
+        public int? HallType { get; set; }
         public string HallCode { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

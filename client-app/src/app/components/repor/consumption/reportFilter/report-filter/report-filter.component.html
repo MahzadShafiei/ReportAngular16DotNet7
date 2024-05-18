@@ -21,16 +21,16 @@
                     <div class="form-group">
                         <label>نام معاونت</label>
                         <div class="card flex justify-content-center">
-                            <p-dropdown name="selectedHall" [options]="assistanceTypes" [(ngModel)]="selectedAssistance"
-                                optionLabel="name"></p-dropdown>
+                            <p-dropdown name="selectedAssistance" [options]="assistanceTypes" [(ngModel)]="selectedAssistance"
+                                optionLabel="name" (onChange)="onChangeAssistance()" placeholder="انتخاب"></p-dropdown>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>نام مدیریت</label>
                         <div class="card flex justify-content-center">
-                            <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType"
-                                optionLabel="name"></p-dropdown>
+                            <p-dropdown name="selectedManagement" [options]="managementTypes" [(ngModel)]="selectedManagement"
+                                optionLabel="name" placeholder="انتخاب" (onChange)="onChangeManagement()"></p-dropdown>
                         </div>
                     </div>
 
@@ -38,7 +38,7 @@
                         <label>نام سالن</label>
                         <div class="card flex justify-content-center">
                             <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType"
-                                optionLabel="name"></p-dropdown>
+                                optionLabel="name" placeholder="انتخاب"></p-dropdown>
                         </div>
                     </div>
 
