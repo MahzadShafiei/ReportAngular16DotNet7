@@ -59,10 +59,10 @@ export class ReportFilterComponent implements OnInit {
   constructor(private reportFilterService: ReportFilterService, private datepipe: DatePipe) {
   }
 
-  onChangeManagement(){
+  onChangeManagement() {
     this.reportFilterService.GetUnitsByParameter(Number(this.selectedManagement?.id)).subscribe({
-      next: (management) => {        
-        this.hallsType = management;       
+      next: (management) => {
+        this.hallsType = management;
       },
       error: (response) => {
         console.log(response);
@@ -70,15 +70,26 @@ export class ReportFilterComponent implements OnInit {
     });
   }
 
-  onChangeAssistance() {    
+  onChangeAssistance() {
     this.reportFilterService.GetUnitsByParameter(Number(this.selectedAssistance?.id)).subscribe({
-      next: (management) => {        
-        this.managementTypes = management;       
+      next: (management) => {
+        this.managementTypes = management;
       },
       error: (response) => {
         console.log(response);
       }
     });
+  }
+
+  onChangeHall() {
+    this.hallsCode =
+      [
+        { name: '1', code: '1' },
+        { name: '2', code: '2' },
+        { name: '3', code: '3' },
+        { name: '4', code: '4' },
+        { name: '5', code: '5' }
+      ];
   }
 
   ngOnInit(): void {
@@ -94,15 +105,6 @@ export class ReportFilterComponent implements OnInit {
       }
     });
 
-    this.hallsCode =
-      [
-        { name: '1', code: '1' },
-        { name: '2', code: '2' },
-        { name: '3', code: '3' },
-        { name: '4', code: '4' },
-        { name: '5', code: '5' }
-      ];
-
     this.periods = [
       { name: 'دقیقه ای', code: Period.Minute },
       { name: 'ساعتی', code: Period.Hour },
@@ -114,7 +116,7 @@ export class ReportFilterComponent implements OnInit {
   }
 
   //جست و جوی دیتای 
-  load() {    
+  load() {
     this.loading = true;
     this.getByFilter();
 
@@ -129,10 +131,10 @@ export class ReportFilterComponent implements OnInit {
     var meter: Meter = Meter[this.selectedMeter as keyof typeof Meter];
 
     var parameter: filterParameter = {
-      assisttanceType: this.selectedAssistance?.id,
-      managementType: this.selectedManagement?.id,
-      hallType: this.selectedHallType?.id,
-      hallCode: this.selectedHallCode?.code,
+      assisttanceType: this.selectedAssistance == undefined ? 0 : this.selectedAssistance?.id,
+      managementType: this.selectedManagement == undefined ? 0 : this.selectedManagement?.id,
+      hallType: this.selectedHallType == undefined ? 0 : this.selectedHallType?.id,
+      hallCode: this.selectedHallCode == undefined ? '0' : this.selectedHallCode?.code,
       startDate: this.datepipe.transform(this.startDate, "yyyy-MM-dd"),
       endDate: this.datepipe.transform(this.endDate, "yyyy-MM-dd"),
       meter: meter,

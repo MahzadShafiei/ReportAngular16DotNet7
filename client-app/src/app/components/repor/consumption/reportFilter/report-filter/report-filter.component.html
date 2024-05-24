@@ -38,7 +38,7 @@
                         <label>نام سالن</label>
                         <div class="card flex justify-content-center">
                             <p-dropdown name="selectedHall" [options]="hallsType" [(ngModel)]="selectedHallType"
-                                optionLabel="name" placeholder="انتخاب"></p-dropdown>
+                                optionLabel="name" placeholder="انتخاب" (onChange)="onChangeHall()"></p-dropdown>
                         </div>
                     </div>
 
@@ -46,7 +46,7 @@
                         <label>شماره سالن</label>
                         <div class="card flex justify-content-center">
                             <p-dropdown name="selectedHallCode" [options]="hallsCode" [(ngModel)]="selectedHallCode"
-                                optionLabel="name"></p-dropdown>
+                                optionLabel="name" placeholder="انتخاب"></p-dropdown>
                         </div>
                     </div>
 

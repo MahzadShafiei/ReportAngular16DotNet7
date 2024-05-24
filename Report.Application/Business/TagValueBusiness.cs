@@ -5,7 +5,9 @@ using Report.Application.Enum;
 using Report.Application.Model;
 using Report.Domain;
 using Report.Persistance;
+using System.Collections;
 using System.Globalization;
+using System.Reflection.Metadata;
 
 namespace Report.Application.Business
 {
@@ -99,16 +101,49 @@ namespace Report.Application.Business
                     break;
             }
 
-            //var hallType = (int)filterParameter.HallType;
-            var unitId = filterParameter.HallType;
+            Queue my_queue = new Queue();
+            int hallType = 0;
+            int unitId = 0;
+            int hallCode = 0;
+            List<int> units = new List<int>();
+
+            if (filterParameter.HallType != 0)
+            {
+                units.Add((int)filterParameter.HallType);
+                hallCode = filterParameter.HallCode == null ? 0 : Convert.ToInt32(filterParameter.HallCode);
+            }
+            else
+            if (filterParameter.ManagementType != 0)
+                my_queue.Enqueue(filterParameter.ManagementType);
+            else
+                if (filterParameter.AssisttanceType != 0)
+                my_queue.Enqueue(filterParameter.AssisttanceType);
+            else
+                my_queue.Enqueue(1);
+
+            while (my_queue.Count > 0)
+            {
+                int top = (int)my_queue.Dequeue();
+                var childern = dataContext.Unit.Where(c => c.ParentId == top);
+                if (childern.Any())
+                {
+                    childern.ToList().ForEach(c =>
+                    {
+                        my_queue.Enqueue(c.Id);
+                    });
+                }
+                else
+                    units.Add(top);
+
+            }
+
             var meter = (int)filterParameter.Meter;
-            var hallCode = Convert.ToInt32(filterParameter.HallCode);
 
             var formula = dataContext.Formula.Where(c =>
             //c.HallType == hallType &&
-            unitId != 0 ? c.UnitId == unitId : true &&
+            units.Contains(c.UnitId) &&
             c.Meter == meter &&
-            c.HallCode == hallCode &&
+            (hallCode == 0 ? true : c.HallCode == hallCode) &&
             c.SensorCode.EndsWith(endsString)
             ).ToList()
             .Select(c => new { c.SensorCode, c.UsagePercent });
