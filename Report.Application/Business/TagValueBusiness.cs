@@ -163,7 +163,9 @@ namespace Report.Application.Business
 
         public async Task<List<ChartModel>> CalculateDate(List<TagValue> tagValue, Dictionary<int, int> hallTags, Period period)
         {
+            var firstResult = new List<ChartModel>();
             var result = new List<ChartModel>();
+
             tagValue.AsParallel()
                         .GroupBy(x => x.Id).ToList().ForEach(
 
@@ -179,7 +181,7 @@ namespace Report.Application.Business
                             int day = persianCalendar.GetDayOfMonth(timeStampDate.Key);
                             var persianDate = year + "/" + month + "/" + day;
 
-                            if (period == Period.Day) FillDailyResult(result, persianDate, timeStampDate, hallTags, tagInfoId.Key);
+                            if (period == Period.Day) FillDailyResult(firstResult, persianDate, timeStampDate, hallTags, tagInfoId.Key);
 
                             else if (period == Period.Minute)
                             {
@@ -205,7 +207,7 @@ namespace Report.Application.Business
                                             var finalList = dataDic.ToList().Where(x => x.Key <= highMinute && lowMinute <= x.Key).ToList();
 
                                             if (finalList.Any())
-                                                result.Add(new ChartModel()
+                                                firstResult.Add(new ChartModel()
                                                 {
                                                     Label = persianDate + "ساعت: " + timeStampHour.Key + ":" + lowMinute,
                                                     Data = (int)finalList.Average(x => x.Value),
@@ -220,6 +222,17 @@ namespace Report.Application.Business
 
                         })
                     );
+
+            firstResult.GroupBy(c => c.Label).ToList().ForEach(c =>
+            {
+                result.Add(new ChartModel()
+                {
+                    Label = c.Key,
+                    Data = c.Sum(x => x.Data),
+                });
+            });
+
+
             return result;
         }
 
